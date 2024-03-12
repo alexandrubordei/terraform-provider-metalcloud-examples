@@ -1,4 +1,3 @@
-/* Simple example of using metalcloud */
 terraform {
   required_providers {
     metalcloud = {
