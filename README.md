@@ -25,4 +25,23 @@ export TF_VAR_logging_enabled=true
 export TF_LOG=DEBUG
 ```
 
+## Running terraform
+
+Use the examples like any other terraform project:
+```
+terraform init
+terraform plan
+terraform apply
+```
+
+## The prevent_deploy flag
+
+Note that the there is a `prevent_deploy` flag on the infrastructure_deployer script. Set this flag to test your infrastructure creation process but not actually deploy it. You can safely run terraform apply as many times as you want while designing your MetalSoft infrastructure. When ready flip the flag to false or comment it out and the infrastructure will deploy the changes on the equipment.
+
+
+## Destroying an infrastructure
+
+You can safely use `terraform destroy` to delete an infrastructure. 
+
+
 
