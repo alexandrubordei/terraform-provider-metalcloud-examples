@@ -191,7 +191,7 @@ resource "metalcloud_shared_drive" "datastore" {
     infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
     
     shared_drive_label = "shared-drive"
-    shared_drive_size_mbytes = 10240
+    shared_drive_size_mbytes = 16384 // 16 GB
     shared_drive_storage_type = "iscsi_ssd"
   
     shared_drive_attached_instance_arrays = [
@@ -240,8 +240,33 @@ resource "metalcloud_infrastructure_deployer" "infrastructure_deployer" {
     metalcloud_instance_array.srv3,
     metalcloud_shared_drive.datastore,
   ]
-  
 
+  server_allocation_policy {
+    instance_array_id = metalcloud_instance_array.srv1.instance_array_id
+    allocation_policy {
+      server_type_id = data.metalcloud_server_type.st1.server_type_id
+      server_count   = 1
+      server_ids     = [15]
+    }
+  }
+
+  server_allocation_policy {
+    instance_array_id = metalcloud_instance_array.srv2.instance_array_id
+    allocation_policy {
+      server_type_id = data.metalcloud_server_type.st1.server_type_id
+      server_count   = 1
+      server_ids     = [14]
+    }
+  }
+
+  server_allocation_policy {
+    instance_array_id = metalcloud_instance_array.srv3.instance_array_id
+    allocation_policy {
+      server_type_id = data.metalcloud_server_type.st1.server_type_id
+      server_count   = 1
+      server_ids     = [13]
+    }
+  }
 }
 
 data "metalcloud_infrastructure_output" "output"{
