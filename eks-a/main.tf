@@ -38,12 +38,12 @@ resource "metalcloud_network" "wan" {
 	infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
 	network_type = "wan"
 }
-	
+/*
 resource "metalcloud_network" "san" {
 	infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
 	network_type = "san"
 }
-	
+*/
 	
 data "metalcloud_network_profile" "eksa-mgmt"{
 	network_profile_label = "eksa-mgmt"
@@ -91,33 +91,34 @@ resource "metalcloud_eksa" "cluster01" {
 		interface_index = 0
 		network_id = metalcloud_network.wan.id
 	}
-	
+	/*
 	interface_eksa_mgmt{
 		interface_index = 1
 		network_id = metalcloud_network.san.id
 	}
-	
+	*/
 	
 	interface_mgmt{
 		interface_index = 0
 		network_id = metalcloud_network.wan.id
 	}
-	
+	/*
 	interface_mgmt {
 		interface_index = 1
 		network_id = metalcloud_network.san.id
 	}
-	
+	*/
 	interface_worker {
 		interface_index = 0
 		network_id = metalcloud_network.wan.id
 	}
 	
+	/*
 	interface_worker {
 		interface_index = 1
 		network_id = metalcloud_network.san.id
 	}
-	
+	*/
 	instance_array_network_profile_eksa_mgmt {
 		network_id = metalcloud_network.wan.id
 		network_profile_id = data.metalcloud_network_profile.eksa-mgmt.id
@@ -141,27 +142,25 @@ data "metalcloud_subnet_pool" "wan" {
 resource "metalcloud_subnet" "kube_boot_network" {
 		subnet_type = "ipv4"
 		infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
-		subnet_label="kube_boot_network"
+		subnet_label="kube-boot-network"
 		cluster_id = metalcloud_eksa.cluster01.cluster_id
 		network_id = metalcloud_network.wan.network_id
-		subnet_pool_id = data.metalcloud_subnet_pool.wan
+		subnet_pool_id = data.metalcloud_subnet_pool.wan.subnet_pool_id
 		subnet_automatic_allocation = false
 		subnet_is_ip_range = true
 		subnet_ip_range_ip_count = 5
 		subnet_override_vlan_id=1003
-		
-		
 }
 
 
 
 resource "metalcloud_subnet" "kube_vip_network" {
 		subnet_type = "ipv4"
-		subnet_label="kube_vip_network"
+		subnet_label="kube-vip-network"
 		infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
 		cluster_id = metalcloud_eksa.cluster01.cluster_id
 		network_id = metalcloud_network.wan.network_id
-		subnet_pool_id = data.metalcloud_subnet_pool.wan
+		subnet_pool_id = data.metalcloud_subnet_pool.wan.subnet_pool_id
 		subnet_automatic_allocation = false
 		subnet_is_ip_range = true
 		subnet_ip_range_ip_count = 5
@@ -172,11 +171,11 @@ resource "metalcloud_subnet" "kube_vip_network" {
 
 resource "metalcloud_subnet" "kube_services_load_balancer_network" {
 		subnet_type = "ipv4"
-		subnet_label="kube_services_load_balancer_network"
+		subnet_label="kube-services-lb-network"
 		infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
 		cluster_id = metalcloud_eksa.cluster01.cluster_id
 		network_id = metalcloud_network.wan.network_id
-		subnet_pool_id = data.metalcloud_subnet_pool.wan
+		subnet_pool_id = data.metalcloud_subnet_pool.wan.subnet_pool_id
 		subnet_automatic_allocation = false
 		subnet_is_ip_range = true
 		subnet_ip_range_ip_count = 5
@@ -225,8 +224,9 @@ data "metalcloud_infrastructure_output" "output"{
 }
 
 output "credentials" {
-    value = jsondecode(data.metalcloud_infrastructure_output.output.instances)
+    value = jsondecode(data.metalcloud_infrastructure_output.output.clusters)
 }
+
 
 variable "user_email" {
   default = ""
