@@ -225,14 +225,18 @@ resource "metalcloud_vmware_vcf" "cluster01" {
     }
  }
 
- data "metalcloud_subnet_pool" "subnetpool1" {
+data "metalcloud_subnet_pool" "subnetpool1" {
         subnet_pool_label = "vmware-test"
 }
 
-resource "metalcloud_subnet" "subnet01" {
+data "metalcloud_subnet_pool" "subnetpool2" {
+        subnet_pool_label = "vmware-test-normal"
+}
+
+resource "metalcloud_subnet" "esxi-mgmt" {
                 subnet_type = "ipv4"
                 infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
-                subnet_label="esxi_mgmt"
+                subnet_label="esxi-mgmt"
                 cluster_id = metalcloud_vmware_vcf.cluster01.cluster_id
                 network_id = metalcloud_network.wan.network_id
                 subnet_pool_id = data.metalcloud_subnet_pool.subnetpool1.subnet_pool_id
@@ -246,13 +250,13 @@ resource "metalcloud_subnet" "subnet01" {
 }
 
 
-resource "metalcloud_subnet" "subnet02" {
+resource "metalcloud_subnet" "vmotion" {
                 subnet_type = "ipv4"
                 infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
-                subnet_label="vmotion"
+                subnet_label = "vmotion"
                 cluster_id = metalcloud_vmware_vcf.cluster01.cluster_id
                 network_id = metalcloud_network.wan.network_id
-                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool1.subnet_pool_id
+                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool2.subnet_pool_id
                 subnet_automatic_allocation = false
                 subnet_override_vlan_auto_allocation_index = 2
                 subnet_override_vlan_id = 0
@@ -262,13 +266,13 @@ resource "metalcloud_subnet" "subnet02" {
 }
 
 
-resource "metalcloud_subnet" "subnet03" {
+resource "metalcloud_subnet" "vsan" {
                 subnet_type = "ipv4"
                 infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
                 subnet_label="vsan"
                 cluster_id = metalcloud_vmware_vcf.cluster01.cluster_id
                 network_id = metalcloud_network.wan.network_id
-                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool1.subnet_pool_id
+                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool2.subnet_pool_id
                 subnet_automatic_allocation = false
                 subnet_override_vlan_auto_allocation_index = 3
                 subnet_override_vlan_id = 0
@@ -277,13 +281,13 @@ resource "metalcloud_subnet" "subnet03" {
                 
 }
 
-resource "metalcloud_subnet" "subnet04" {
+resource "metalcloud_subnet" "nsx-host-overlay" {
                 subnet_type = "ipv4"
                 infrastructure_id = data.metalcloud_infrastructure.infra.infrastructure_id
                 subnet_label="nsx-host-overlay"
                 cluster_id = metalcloud_vmware_vcf.cluster01.cluster_id
                 network_id = metalcloud_network.wan.network_id
-                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool1.subnet_pool_id
+                subnet_pool_id = data.metalcloud_subnet_pool.subnetpool2.subnet_pool_id
                 subnet_automatic_allocation = false
                 subnet_override_vlan_auto_allocation_index = 4
                 subnet_override_vlan_id = 0
